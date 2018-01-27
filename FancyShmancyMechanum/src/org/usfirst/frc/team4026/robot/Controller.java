@@ -24,42 +24,12 @@ public class Controller {
 		return mainDriverStick.getThrottle();
 	}
 	
-	boolean shouldIHelpDriverDriveStraight() {
-		return false;
+	public boolean getRawButton(int button) {
+		return driveGamepad.getRawButton(button);
 	}
-	
-	void tankDrive() {
-		double right = mainDriverStick.getY();
-		double left = mainDriverStick.getThrottle();
-
-		//Cut Velocity in half
-		if(mainDriverStick.getRawButton(7)) {
-			right /= 2.0;
-			left /= 2.0;
-		}
-		double avgStick = (right + left) / 2.0;
-		if(!mainDriverStick.getRawButton(8) && !shouldIHelpDriverDriveStraight()) {
-			if (driveReverse) {
-				leftDriveMotor.set(-right);
-				rightDriveMotor.set(left);
-			}
-			else {
-				leftDriveMotor.set(left);
-				rightDriveMotor.set(-right);
-			}
-			isGyroresetTelop = false;
-		}
-		else {
-			if(isGyroresetTelop == false) {
-				driveGyro.reset();
-				isGyroresetTelop = true;
-			}
-			if (driveReverse) {
-				keepDriveStraight(avgStick, avgStick, 0);
-			}
-			else {
-				keepDriveStraight(-avgStick, -avgStick, 0);
-			}
-		}
+	@Override
+	public int shutdown() {
+		
+		return 1;
 	}
 }
