@@ -7,13 +7,13 @@ public class Controller {
 	Joystick manipulatorStick;
 	boolean isInitialized = false;
 	
-	public void init() {
+	public int init() {
 		if(!isInitialized) {
 			mainDriverStick = new Joystick(0);
 			manipulatorStick = new Joystick(1);
 			isInitialized = true;
 		}
-	return 1
+	return 1;
 	}
 	
 	public double getLeft(){
