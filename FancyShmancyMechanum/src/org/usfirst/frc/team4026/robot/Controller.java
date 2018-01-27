@@ -2,7 +2,7 @@ package org.usfirst.frc.team4026.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 
-public class Controller {
+public class Controller implements Subsystem {
 	Joystick mainDriverStick;
 	Joystick manipulatorStick;
 	boolean isInitialized = false;
@@ -25,11 +25,10 @@ public class Controller {
 	}
 	
 	public boolean getRawButton(int button) {
-		return driveGamepad.getRawButton(button);
+		return mainDriverStick.getRawButton(button);
 	}
 	@Override
 	public int shutdown() {
-		
 		return 1;
 	}
 }
