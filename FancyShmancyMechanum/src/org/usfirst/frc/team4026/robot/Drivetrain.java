@@ -13,6 +13,9 @@ public class Drivetrain implements Subsystem {
 	
 	private static final int GYRO_PORT = 0;
 	
+	private AnalogGyro driveGyro;
+	private boolean isGyroresetTelop;
+	
 	private VictorSP rightDriveMotor;
 	private VictorSP leftDriveMotor;
 	
@@ -72,6 +75,31 @@ public class Drivetrain implements Subsystem {
 	
 	boolean shouldIHelpDriverDriveStraight() {
 		return false;
+	}
+	
+	void keepDriveStraight(double leftDriveVel, double rightDriveVel, double targetAngle) {
+		double error = 0;
+		error = targetAngle - driveGyro.getAngle();
+		double correctionFactor = (error/75.0);
+
+		if(leftDriveVel > 0.9)
+			leftDriveVel = 0.9;
+		else if(leftDriveVel < -0.9)
+			leftDriveVel = -0.9;
+
+		if(rightDriveVel > 0.9)
+			rightDriveVel = 0.9;
+		else if(rightDriveVel < -0.9)
+			rightDriveVel = -0.9;
+
+		if(targetAngle > (driveGyro.getAngle() - 0.5) || targetAngle < (driveGyro.getAngle() + 0.5)) {
+			leftDriveMotor.set(((-leftDriveVel) + correctionFactor) * batteryCompensationPct());
+			rightDriveMotor.set((rightDriveVel + correctionFactor) * batteryCompensationPct());
+		}
+		else {
+			leftDriveMotor.set(-leftDriveVel * batteryCompensationPct());
+			rightDriveMotor.set(rightDriveVel * batteryCompensationPct());
+		}
 	}
 	
 	void tankDrive(Controller foo) {
