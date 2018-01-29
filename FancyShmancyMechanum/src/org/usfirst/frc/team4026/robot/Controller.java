@@ -3,6 +3,7 @@ package org.usfirst.frc.team4026.robot;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class Controller implements Subsystem {
+	
 	Joystick mainDriverStick;
 	Joystick manipulatorStick;
 	boolean isInitialized = false;

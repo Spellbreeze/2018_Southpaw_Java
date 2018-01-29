@@ -2,10 +2,9 @@ package org.usfirst.frc.team4026.robot;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Jaguar;
+import edu.wpi.first.wpilibj.VictorSP;
 
-//import Subsystem.java;
-
-public class Drivetrain extends Subsystem {
+public class Drivetrain implements Subsystem {
 	
 	private static final int FRONT_LEFT = 0;
 	private static final int FRONT_RIGHT = 1;
@@ -14,23 +13,27 @@ public class Drivetrain extends Subsystem {
 	
 	private static final int GYRO_PORT = 0;
 	
+	private VictorSP rightDriveMotor;
+	private VictorSP leftDriveMotor;
 	
 	public Jaguar FrontLeft;
 	public Jaguar FrontRight;
 	public Jaguar RearLeft;
 	public Jaguar RearRight;
 	
-	private AnalogGyro Gyro;
+	private AnalogGyro theGyro;
 	boolean isInitialized = false;
 	
-	public int init(){
-		if(!isInitialized){
+	public int init() {
+		
+		if(!isInitialized) {
+			
 		FrontLeft = new Jaguar(FRONT_LEFT);
 		FrontRight = new Jaguar(FRONT_RIGHT);
 		RearLeft = new Jaguar (REAR_LEFT);
 		RearRight = new Jaguar (REAR_RIGHT);
 		
-		Gyro = new AnalogGyro(GYRO_PORT);
+		theGyro = new AnalogGyro(GYRO_PORT);
 		
 		isInitialized = true;
 		return 0;
@@ -39,7 +42,7 @@ public class Drivetrain extends Subsystem {
 		return 1;
 	}
 	
-	public int act(Robot robot){
+	public int act(Robot robot) {
 		double left = -robot.controller.getLeft();
 		double right = robot.controller.getRight();
 		FrontLeft.set(left); 
@@ -52,7 +55,7 @@ public class Drivetrain extends Subsystem {
 	}
 	
 	public double getGyroHeading(){
-		return Gyro.getAngle();
+		return theGyro.getAngle();
 	}
 	public int shutdown(){
 		stopDrive();
@@ -71,17 +74,17 @@ public class Drivetrain extends Subsystem {
 		return false;
 	}
 	
-	void tankDrive() {
-		double right = mainDriverStick.getY();
-		double left = mainDriverStick.getThrottle();
+	void tankDrive(Controller foo) {
+		double right = foo.mainDriverStick.getY();
+		double left = foo.mainDriverStick.getThrottle();
 
 		//Cut Velocity in half
-		if(mainDriverStick.getRawButton(7)) {
+		if(foo.mainDriverStick.getRawButton(7)) {
 			right /= 2.0;
 			left /= 2.0;
 		}
 		double avgStick = (right + left) / 2.0;
-		if(!mainDriverStick.getRawButton(8) && !shouldIHelpDriverDriveStraight()) {
+		if(!foo.mainDriverStick.getRawButton(8) && !shouldIHelpDriverDriveStraight()) {
 			if (driveReverse) {
 				leftDriveMotor.set(-right);
 				rightDriveMotor.set(left);
