@@ -3,6 +3,7 @@ package org.usfirst.frc.team4026.robot;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.hal.PowerJNI;
 
 public class Drivetrain implements Subsystem {
 	
@@ -12,6 +13,10 @@ public class Drivetrain implements Subsystem {
 	private static final int REAR_RIGHT = 3;
 	
 	private static final int GYRO_PORT = 0;
+	
+	static final double MAX_BATTERY = 12.3;
+	
+	private boolean driveReverse;
 	
 	private AnalogGyro driveGyro;
 	private boolean isGyroresetTelop;
@@ -135,5 +140,14 @@ public class Drivetrain implements Subsystem {
 				keepDriveStraight(-avgStick, -avgStick, 0);
 			}
 		}
+	}
+	
+	double batteryCompensationPct() {
+		double batteryScaleFactor = 0.0;
+
+		// RobotController.getInstance().getBatteryVoltage issue https://www.chiefdelphi.com/forums/showthread.php?p=1717817
+		batteryScaleFactor = MAX_BATTERY / PowerJNI.getVinVoltage();
+
+		return batteryScaleFactor;
 	}
 }
